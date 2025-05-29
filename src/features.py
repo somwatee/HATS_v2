@@ -41,4 +41,34 @@ def compute_features(df: pd.DataFrame) -> pd.DataFrame:
     # กำหนด dtype เป็น object เพื่อเก็บ None และ ints ได้ตรงตาม test
     df['mss'] = pd.Series(mss, dtype=object)
     
+# ตรงท้ายไฟล์ compute_features() ก่อน return df
+
+    # --- Fair Value Gap (FVG) ---
+    # สร้างคอลัมน์ default = 0
+    df['fvg_bull'] = 0
+    df['fvg_bear'] = 0
+    # เริ่มจาก index 2 เป็นต้นไป (ต้องมีข้อมูล i-2)
+    for i in range(2, len(df)):
+        low_i = df.at[i, 'low']
+        high_i2 = df.at[i-2, 'high']
+        high_i = df.at[i, 'high']
+        low_i2 = df.at[i-2, 'low']
+
+        # Bullish FVG
+        if low_i > high_i2:
+            df.at[i, 'fvg_bull'] = 1
+        # Bearish FVG
+        elif high_i < low_i2:
+            df.at[i, 'fvg_bear'] = 1
+
+    # กลับไป return df ด้านล่าง (อย่าลืมว่าต้องเพิ่มสองคอลัมน์นี้เข้าไปใน output)
+
+    # --- Exponential Moving Average (EMA) ---
+    # กำหนด period สำหรับ EMA
+    ema_period = 14
+    # คำนวณ EMA จากราคาปิด
+    df['ema'] = df['close'].ewm(span=ema_period, adjust=False).mean()
+
+
     return df
+
