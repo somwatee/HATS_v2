@@ -1,71 +1,46 @@
-# ======================
-#  Python Bytecode
-# ======================
-__pycache__/              # โฟลเดอร์ที่ Python สร้างเก็บไฟล์ .pyc
-*.py[cod]                 # .pyc, .pyo, .pyd
-*$py.class                # ไฟล์ bytecode แบบอื่น
+# ── Byte-compiled / optimized Python files
+__pycache__/
+*.py[cod]
+*$py.class
 
-# ======================
-#  Virtual Environments
-# ======================
-# สำหรับ virtualenv, venv, Conda
-venv/                     
-env/                      
-.venv/                    
-.env/                     
-.conda/                   
+# ── Virtual environment
+venv/
+.env/
 
-# ======================
-#  IDE / Editor Files
-# ======================
-.vscode/                  # VSCode settings
-.idea/                    # JetBrains IDEs (PyCharm ฯลฯ)
-*.sublime-project        # Sublime Text project
-*.sublime-workspace      # Sublime Text workspace
+# ── Data files (raw / generated)
+data/
+*.csv
+*.json
 
-# ======================
-#  Logs and Reports
-# ======================
-*.log                     # ไฟล์ log ใดๆ
-logs/                     # โฟลเดอร์เก็บ logs
-coverage/                 # โฟลเดอร์ coverage report
-htmlcov/                  # ผลลัพธ์ coverage แบบ HTML
-junit-*.xml               # รายงาน junit
+# ── Models & artifacts
+models/
+*.pkl
+*.joblib
+*.json      # ถ้าไม่ใช่ config ไฟล์ที่ต้อง track
 
-# ======================
-#  Test / Cache
-# ======================
-.pytest_cache/            # pytest cache
-.tox/                     # tox environments
-.nox/                     # nox environments
-.mypy_cache/              # mypy cache
-.dmypy.json               # mypy daemon
+# ── Logs
+logs/
+*.log
 
-# ======================
-#  Data & Models (ถ้าไม่อยากเก็บไฟล์ใหญ่)
-# ======================
-# CSV, Parquet, HDF5 ฯลฯ
-data/*.csv                
-data/*.parquet            
-data/*.h5                 
-# โมเดลที่เซฟออกมา
-models/*.json             
-models/*.pkl              
+# ── Configuration secrets / credentials
+config/*.secret.yaml
+*.pem
+*.key
 
-# ======================
-#  Configuration Overrides
-# ======================
-# ถ้าอยากให้มี config local แต่ไม่ track ใน Git
-config/config.local.yaml  
+# ── IDE / Editor
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
 
-# ======================
-#  OS-generated Files
-# ======================
-.DS_Store                 # macOS Finder
-Thumbs.db                 # Windows thumbnail cache
+# ── OS-specific
+.DS_Store
+Thumbs.db
 
-# ======================
-#  Miscellaneous
-# ======================
-*.tmp                     # ไฟล์ชั่วคราว
-*.swp                     # Vim swap files
+# ── Build / Distribution
+build/
+dist/
+*.egg-info/
