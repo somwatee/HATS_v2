@@ -176,3 +176,126 @@ def test_fibonacci_levels_values_correct():
     assert pytest.approx(1.528, rel=1e-3) == result.at[4, 'fibo_382']
     assert pytest.approx(2.0,   rel=1e-3) == result.at[4, 'fibo_5']
     assert pytest.approx(2.472, rel=1e-3) == result.at[4, 'fibo_618']
+
+def test_atr_column_and_length():
+    import pandas as pd
+    from src.features import compute_features
+
+    # สร้าง DataFrame ตัวอย่าง 20 แท่ง แท่งราคาต่างๆ
+    data = {
+        'time': pd.date_range('2025-01-01', periods=20, freq='min'),
+        'open': [1 + i*0.5 for i in range(20)],
+        'high': [1 + i*0.6 for i in range(20)],
+        'low':  [1 + i*0.4 for i in range(20)],
+        'close':[1 + i*0.5 for i in range(20)],
+        'tick_volume': [100]*20,
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    # เช็คว่ามีคอลัมน์ atr และความยาวไม่เปลี่ยน
+    assert 'atr' in result.columns
+    assert len(result) == len(df)
+
+def test_atr_constant_data():
+    import pandas as pd
+    import numpy as np
+    from src.features import compute_features
+
+    # ถ้าราคาไม่เปลี่ยน (high-low=0, prev_close same) → atr ควรเป็น 0
+    data = {
+        'time': pd.date_range('2025-01-01', periods=15, freq='min'),
+        'open': [1.0]*15,
+        'high': [1.0]*15,
+        'low':  [1.0]*15,
+        'close':[1.0]*15,
+        'tick_volume': [10]*15,
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    # ATR ทุกค่า (หลัง dropna) ต้องเป็น 0.0
+    # dropna() เนื่องจากค่าแรกๆ อาจเป็น NaN จาก shift
+    assert all(np.isclose(result['atr'].dropna(), 0.0))
+
+def test_adx_column_and_length():
+    import pandas as pd
+    from src.features import compute_features
+
+    data = {
+        'time': pd.date_range('2025-01-01', periods=20, freq='min'),
+        'open': [1 + i*0.3 for i in range(20)],
+        'high': [1 + i*0.5 for i in range(20)],
+        'low':  [1 + i*0.1 for i in range(20)],
+        'close':[1 + i*0.3 for i in range(20)],
+        'tick_volume': [100]*20,
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    assert 'adx' in result.columns
+    assert len(result) == len(df)
+
+def test_adx_constant_data():
+    import pandas as pd
+    import numpy as np
+    from src.features import compute_features
+
+    data = {
+        'time': pd.date_range('2025-01-01', periods=15, freq='min'),
+        'open': [1.0]*15,
+        'high': [1.0]*15,
+        'low':  [1.0]*15,
+        'close':[1.0]*15,
+        'tick_volume': [10]*15,
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    # ถ้าราคาคงที่ DM และ TR เป็น 0 → adx หลัง dropna อาจเป็น NaN หรือ 0
+    adx_vals = result['adx'].dropna()
+    # ตรวจว่าไม่มีค่าเป็น infinite
+    assert all(np.isfinite(adx_vals))
+
+def test_volume_imbalance_column_and_length():
+    import pandas as pd
+    from src.features import compute_features
+
+    data = {
+        'time': pd.date_range('2025-01-01', periods=5, freq='min'),
+        'open':  [1, 2, 3, 4, 5],
+        'high':  [1, 2, 3, 4, 5],
+        'low':   [1, 2, 3, 4, 5],
+        'close': [2, 1, 4, 3, 5],  # alternate up/down/up/down/up
+        'tick_volume': [10, 20, 30, 40, 0],  # last bar zero volume
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    assert 'volume_imbalance' in result.columns
+    assert len(result) == len(df)
+
+def test_volume_imbalance_values():
+    import pandas as pd
+    from src.features import compute_features
+    import numpy as np
+
+    # สร้าง DataFrame ทดสอบค่าต่าง ๆ
+    data = {
+        'time': pd.date_range('2025-01-01', periods=4, freq='min'),
+        'open':  [1, 2, 1, 2],
+        'high':  [1, 2, 1, 2],
+        'low':   [1, 2, 1, 2],
+        'close': [2, 1, 1, 3],  # idx0 up, idx1 down, idx2 equal, idx3 up
+        'tick_volume': [10, 10, 10, 10],
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    # คำนวณ expected:
+    # idx0: up → (10-0)/10 = 1.0
+    # idx1: down → (0-10)/10 = -1.0
+    # idx2: equal → (0-0)/10 = 0.0
+    # idx3: up → (10-0)/10 = 1.0
+    expected = [1.0, -1.0, 0.0, 1.0]
+    assert np.allclose(result['volume_imbalance'].tolist(), expected)
