@@ -1,0 +1,44 @@
+# config/config.yaml
+
+# ─── General Settings ─────────────────────────────────────────────────────────
+mode: "demo"             # demo=บัญชีทดลอง, live=บัญชีจริง
+symbol: "XAUUSD"
+timeframe: "M1"
+stop_loss_mode: "dynamic"  # options: fixed, dynamic
+take_profit_mode: "dynamic"
+cooldown_seconds: 60
+
+# ─── Paths ────────────────────────────────────────────────────────────────────
+model_path: "models/xgboost_model.json"
+historical_data_path: "data/historical.csv"
+features_data_path: "data/data_with_features.csv"
+dataset_path: "data/dataset.csv"
+trade_log_path: "data/real_trade_log.csv"
+
+# ─── MT5 Connection ───────────────────────────────────────────────────────────
+mt5:
+  terminal_path: "C:/Program Files/Tickmill MT5 Terminal/terminal64.exe"  # ถ้าใช้ Windows ต้องระบุ path
+  server: "demo.mt5tickmill.com"                                      # ชื่อ server ตามใน MT5
+  login: 25198868                                                # account number
+  password: "R6^e}%_>rt&Z"
+  timeout: 5000                                                 # ms สำหรับเชื่อมต่อ
+
+# ─── Telegram Alerts ─────────────────────────────────────────────────────────
+telegram:
+  bot_token: "7965521188:AAFoDFO5_SCg8Ole5LjiMiFkkJfRPoOpBB8"  # ได้จาก BotFather
+  chat_id: "1730880271"                         # group หรือ user chat ID
+  alert_on:                                           # เลือกเหตุการณ์ที่ต้องแจ้งเตือน
+    - connection_error
+    - order_error
+    - system_health
+
+# ─── Online Learning (River) ───────────────────────────────────────────────────
+online_learning:
+  enabled: true
+  model_path: "models/river_model.bin"
+  update_on_trade: true
+
+# ─── Walk‐forward Settings ────────────────────────────────────────────────────
+walk_forward:
+  window_size: 5000
+  step_size: 1000
