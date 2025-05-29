@@ -1,0 +1,52 @@
+# ────────────────────────────────────────────────────────────
+# Pylint configuration
+# ดู document เพิ่มเติม: https://pylint.pycqa.org/
+# ────────────────────────────────────────────────────────────
+
+[MASTER]
+# โฟลเดอร์/ไฟล์ที่ไม่ตรวจสอบ
+ignore=venv,data,models,tests
+
+# ถ้าอยาก ignore pattern เฉพาะไฟล์ ก็ใช้ ignore-patterns
+# ignore-patterns=.*_test.py
+
+[MESSAGES CONTROL]
+# ปิด warning เกี่ยวกับ docstring ชั่วคราว
+# C0114: missing-module-docstring
+# C0115: missing-class-docstring
+# C0116: missing-function-docstring
+disable=
+    C0114,
+    C0115,
+    C0116
+
+[REPORTS]
+# output-format: text, colorized, msvs (Visual Studio), html, json
+output-format = colorized
+# ตรวจสอบคะแนน (0–10) ถ้าไม่อยากได้ให้ปิด report
+reports = no
+
+[FORMAT]
+# ความยาวบรรทัดสูงสุด
+max-line-length = 88
+
+[BASIC]
+# ชื่อ module ต้องเป็น lowercase_underscore (PEP8)
+module-rgx=[a-z_][a-z0-9_]*$
+
+# ชื่อ class ต้องเป็น CamelCase
+class-rgx=[A-Z_][a-zA-Z0-9]+$
+
+# ชื่อ function ต้องเป็น lowercase_underscore
+function-rgx=[a-z_][a-z0-9_]*$
+
+# ชื่อ constant ต้องเป็น ALL_CAPS
+const-rgx=(([A-Z_][A-Z0-9_]*)|(__.*__))$
+
+[TYPECHECK]
+# ถ้าใช้ library ที่ pylint มองไม่เห็น (เช่น MetaTrader5) ให้เพิ่มที่นี่
+ignored-modules=MetaTrader5
+
+[SIMILARITIES]
+# ปิดการตรวจ duplicate code ชั่วคราว
+min-similarity-lines=50

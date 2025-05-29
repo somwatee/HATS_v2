@@ -1,0 +1,24 @@
+# ────────────────────────────────────────────────────────────
+# Flake8 configuration
+# ดู document เพิ่มเติม: https://flake8.pycqa.org/
+# ────────────────────────────────────────────────────────────
+
+[flake8]
+
+# จำกัดความยาวบรรทัดสูงสุด (characters)
+# 88 เป็นค่า default ของ Black formatter
+max-line-length = 88
+
+# ข้าม error/warning บางตัวที่ขัดกับ Black
+# E203: whitespace before ':' (ขัดกับ Black)
+# W503: line break before binary operator (ขัดกับ Black)
+extend-ignore = E203, W503
+
+# โฟลเดอร์/ไฟล์ที่ไม่ตรวจสอบ
+exclude =
+    .git,            # ไฟล์ Git internal
+    __pycache__,     # ไฟล์ compiled ของ Python
+    venv/,           # virtual environment
+    data/,           # ไฟล์ข้อมูล CSV, JSON
+    models/,         # ไฟล์โมเดล
+    tests/           # โฟลเดอร์ทดสอบ
