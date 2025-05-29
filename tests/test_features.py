@@ -299,3 +299,33 @@ def test_volume_imbalance_values():
     # idx3: up → (10-0)/10 = 1.0
     expected = [1.0, -1.0, 0.0, 1.0]
     assert np.allclose(result['volume_imbalance'].tolist(), expected)
+def test_compute_features_all_columns_present():
+    import pandas as pd
+    from src.features import compute_features
+
+    # สร้าง DataFrame ตัวอย่างพอสมควร
+    n = 20
+    data = {
+        'time': pd.date_range('2025-01-01', periods=n, freq='min'),
+        'open':  [1 + i*0.1 for i in range(n)],
+        'high':  [1 + i*0.2 for i in range(n)],
+        'low':   [1 + i*0.05 for i in range(n)],
+        'close': [1 + i*0.1 for i in range(n)],
+        'tick_volume': [100 + i for i in range(n)],
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    expected_cols = [
+        'rsi', 'mss',
+        'fvg_bull', 'fvg_bear',
+        'ema',
+        'fibo_382', 'fibo_5', 'fibo_618',
+        'atr', 'adx',
+        'volume_imbalance'
+    ]
+    for col in expected_cols:
+        assert col in result.columns, f"Missing column: {col}"
+
+    # ความยาว DataFrame ไม่เปลี่ยน
+    assert len(result) == len(df)
