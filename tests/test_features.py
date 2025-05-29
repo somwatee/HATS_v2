@@ -132,3 +132,47 @@ def test_ema_increasing_behavior():
     # ทุกคู่สองตำแหน่งถัดไป ต้อง ema[i] <= ema[i+1]
     assert all(ema_vals[i] <= ema_vals[i+1] for i in range(len(ema_vals)-1))
 
+
+def test_fibonacci_levels_columns_and_default_none():
+    import pandas as pd
+    from src.features import compute_features
+
+    data = {
+        'time': pd.date_range('2025-01-01', periods=7, freq='min'),
+        'open': list(range(7)),
+        'high': list(range(7)),
+        'low':  list(range(7)),
+        'close':list(range(7)),
+        'tick_volume': [10]*7,
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    # ตรวจคอลัมน์
+    for col in ['fibo_382', 'fibo_5', 'fibo_618']:
+        assert col in result.columns
+
+    # ก่อน index 4 (fib_period-1) ต้องเป็น None
+    assert all(val is None for val in result['fibo_382'][:4])
+
+def test_fibonacci_levels_values_correct():
+    import pandas as pd
+    import pytest
+    from src.features import compute_features
+
+    data = {
+        'time': pd.date_range('2025-01-01', periods=5, freq='min'),
+        'open': list(range(5)),
+        'high': list(range(5)),  # 0,1,2,3,4
+        'low':  list(range(5)),
+        'close':list(range(5)),
+        'tick_volume': [10]*5,
+    }
+    df = pd.DataFrame(data)
+    result = compute_features(df)
+
+    # ที่ index=4: max_h=4,min_l=0,diff=4
+    # fibo382=1.528, fibo5=2.0, fibo618=2.472
+    assert pytest.approx(1.528, rel=1e-3) == result.at[4, 'fibo_382']
+    assert pytest.approx(2.0,   rel=1e-3) == result.at[4, 'fibo_5']
+    assert pytest.approx(2.472, rel=1e-3) == result.at[4, 'fibo_618']

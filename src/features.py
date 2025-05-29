@@ -65,9 +65,27 @@ def compute_features(df: pd.DataFrame) -> pd.DataFrame:
 
     # --- Exponential Moving Average (EMA) ---
     # กำหนด period สำหรับ EMA
+    # --- Exponential Moving Average (EMA) ---
     ema_period = 14
-    # คำนวณ EMA จากราคาปิด
     df['ema'] = df['close'].ewm(span=ema_period, adjust=False).mean()
+
+    # --- Fibonacci Levels ---
+    fib_period = 5
+    fibo_382 = [None] * len(df)
+    fibo_5 = [None] * len(df)
+    fibo_618 = [None] * len(df)
+    for i in range(fib_period - 1, len(df)):
+        window_high = df['high'].iloc[i - (fib_period - 1):i + 1]
+        window_low = df['low'].iloc[i - (fib_period - 1):i + 1]
+        max_h = window_high.max()
+        min_l = window_low.min()
+        diff = max_h - min_l
+        fibo_382[i] = min_l + 0.382 * diff
+        fibo_5[i]   = min_l + 0.5   * diff
+        fibo_618[i] = min_l + 0.618 * diff
+    df['fibo_382'] = pd.Series(fibo_382, dtype=object)
+    df['fibo_5']   = pd.Series(fibo_5,   dtype=object)
+    df['fibo_618'] = pd.Series(fibo_618, dtype=object)
 
 
     return df
