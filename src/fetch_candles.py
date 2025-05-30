@@ -34,7 +34,15 @@ def fetch_candles(symbol: str, timeframe: str, n: int) -> pd.DataFrame:
         timeframe (str): เช่น "M1", "H1"
         n (int): จำนวนแท่งที่ต้องการดึง
     Returns:
-        pandas.DataFrame: คอลัมน์ ['time', 'open', 'high', 'low', 'close', 'tick_volume']
+        pandas.DataFrame:
+            คอลัมน์ [
+                'time',
+                'open',
+                'high',
+                'low',
+                'close',
+                'tick_volume'
+            ]
     """
     # กรณี n ไม่บวก หรือ timeframe ไม่รองรับ → คืน DataFrame เปล่าพร้อมคอลัมน์
     cols = ["time", "open", "high", "low", "close", "tick_volume"]
