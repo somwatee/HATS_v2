@@ -42,5 +42,5 @@ online_learning:
 # ─── Walk‐forward Settings ────────────────────────────────────────────────────
 walkforward_splits: 3       # จำนวน splits สำหรับ walk-forward backtest
 walk_forward:
-  window_size: 5000
-  step_size: 1000
+  window_size: 1000
+  step_size: 500
