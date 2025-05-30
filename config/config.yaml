@@ -16,6 +16,14 @@ features_data_path: "data/data_with_features.csv"
 dataset_path: "data/dataset.csv"
 trade_log_path: "data/real_trade_log.csv"
 
+# ─── XGBoost Hyperparameters (จาก GridSearchCV) ──────────────────────────────
+xgboost_params:
+  n_estimators: 50
+  max_depth:    3
+  learning_rate: 0.01
+  subsample:    0.6
+  colsample_bytree: 0.6
+
 # ─── MT5 Connection ───────────────────────────────────────────────────────────
 mt5:
   terminal_path: "C:/Program Files/Tickmill MT5 Terminal/terminal64.exe"  # ถ้าใช้ Windows ต้องระบุ path
