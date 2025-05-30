@@ -37,7 +37,7 @@ def main():
     df_dataset = build_dataset(df_labels, trade_log_df=None)
     df_dataset.to_csv("data/dataset.csv", index=False)
 
-    print("✅ Phase 1 pipeline completed.")
+    print("Phase 1 pipeline completed.")
 
 if __name__ == "__main__":
     main()
