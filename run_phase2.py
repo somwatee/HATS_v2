@@ -31,7 +31,6 @@ def main():
     walk_forward(
         ds_path,
         wf_results,
-        n_splits=cfg.get("walkforward_splits", None),
     )
 
     print("Phase 2 pipeline completed.")
