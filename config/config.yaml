@@ -40,6 +40,7 @@ online_learning:
   update_on_trade: true
 
 # ─── Walk‐forward Settings ────────────────────────────────────────────────────
+walkforward_splits: 3       # จำนวน splits สำหรับ walk-forward backtest
 walk_forward:
   window_size: 5000
   step_size: 1000
