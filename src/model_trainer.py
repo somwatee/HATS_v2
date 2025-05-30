@@ -77,14 +77,14 @@ def train_model(
     # หลังโหลด _cfg จาก config.yaml
     params = _cfg.get("xgboost_params", {})
     model = xgb.XGBClassifier(
-    use_label_encoder=False,
-    eval_metric="mlogloss",
-    n_estimators=params.get("n_estimators", 100),
-    max_depth=params.get("max_depth", None),
-    learning_rate=params.get("learning_rate", 0.1),
-    subsample=params.get("subsample", 1.0),
-    colsample_bytree=params.get("colsample_bytree", 1.0),
-)
+                              use_label_encoder=False,
+                              eval_metric="mlogloss",
+                              n_estimators=params.get("n_estimators", 100),
+                              max_depth=params.get("max_depth", None),
+                              learning_rate=params.get("learning_rate", 0.1),
+                              subsample=params.get("subsample", 1.0),
+                              colsample_bytree=params.get("colsample_bytree", 1.0),
+    )
 
     # ฝึกโมเดลจริง แต่จับ error ทุกกรณี
     try:
