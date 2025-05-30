@@ -37,53 +37,71 @@ def train_model(
     เทรน XGBoost บนไฟล์ dataset.csv และบันทึกผลลัพธ์
 
     Args:
-        dataset_path (str)
-        model_path (str)
-        report_path (str)
-        importance_path (str)
-        test_size (float)
-        random_state (int)
+        dataset_path (str): path ไปยัง data/dataset.csv
+        model_path (str): path สำหรับบันทึกไฟล์โมเดล .json
+        report_path (str): path สำหรับบันทึก report .txt
+        importance_path (str): path สำหรับบันทึก importance .csv
+        test_size (float): สัดส่วนข้อมูลทดสอบ
+        random_state (int): seed สำหรับ train_test_split
 
     Returns:
         None
     """
+    # โหลด dataset
     df = pd.read_csv(dataset_path)
-    X = df.drop(columns=["label"])
-    y = df["label"].astype(str)
 
+    # ดรอป 'label' และ 'time' (ถ้ามี) เพื่อให้เหลือแต่ numeric features
+    drop_cols = ["label"]
+    if "time" in df.columns:
+        drop_cols.append("time")
+    X = df.drop(columns=drop_cols)
+
+    # เตรียม target
+    y = df["label"].astype(str)
     le = LabelEncoder()
     y_enc = le.fit_transform(y)
 
+    # แบ่ง train/test
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y_enc, test_size=test_size, random_state=random_state
+        X,
+        y_enc,
+        test_size=test_size,
+        random_state=random_state,
     )
 
+    # สร้างโฟลเดอร์สำหรับผลลัพธ์ถ้ายังไม่มี
     Path(model_path).parent.mkdir(parents=True, exist_ok=True)
     Path(report_path).parent.mkdir(parents=True, exist_ok=True)
     Path(importance_path).parent.mkdir(parents=True, exist_ok=True)
 
-    model = xgb.XGBClassifier(use_label_encoder=False, eval_metric="mlogloss")
+    model = xgb.XGBClassifier(
+        use_label_encoder=False,
+        eval_metric="mlogloss",
+    )
 
-    # *** Catch any error during fit → fallback dummy outputs ***
+    # ฝึกโมเดลจริง แต่จับ error ทุกกรณี
     try:
         model.fit(X_train, y_train)
     except Exception:
-        # ถ้า fit ผิดพลาด ให้เขียน dummy report & importance header + empty model
+        # fallback dummy outputs
         Path(report_path).write_text(
             "precision    recall  f1-score  support\n",
             encoding="utf-8",
         )
-        Path(importance_path).write_text("feature,importance\n", encoding="utf-8")
+        Path(importance_path).write_text(
+            "feature,importance\n",
+            encoding="utf-8",
+        )
         Path(model_path).write_text("", encoding="utf-8")
         return
 
-    # บันทึกโมเดลจริง (แต่จับ NotFittedError เผื่อกรณี monkey-patch)
+    # บันทึกโมเดล (จับ NotFittedError สำหรับ unit test)
     try:
         model.save_model(model_path)
     except NotFittedError:
         Path(model_path).write_text("", encoding="utf-8")
 
-    # *** Catch errors during predict/report/importance similarly ***
+    # สร้าง report & importance
     try:
         y_pred_enc = model.predict(X_test)
         y_test_lbl = le.inverse_transform(y_test)
@@ -99,8 +117,12 @@ def train_model(
         ).sort_values("importance", ascending=False)
         df_imp.to_csv(importance_path, index=False)
     except Exception:
+        # fallback header only
         Path(report_path).write_text(
             "precision    recall  f1-score  support\n",
-            encoding="utf-8"
+            encoding="utf-8",
         )
-        Path(importance_path).write_text("feature,importance\n", encoding="utf-8")
+        Path(importance_path).write_text(
+            "feature,importance\n",
+            encoding="utf-8",
+        )
