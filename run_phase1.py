@@ -16,7 +16,7 @@ def main():
     symbol    = cfg["symbol"]
     timeframe = cfg["timeframe"]
     horizon   = cfg.get("label_horizon", 5)
-    N         = cfg.get("fetch_candles_n", 500)
+    N         = cfg.get("fetch_candles_n", 10000)
 
     # เตรียมโฟลเดอร์ data
     Path("data").mkdir(exist_ok=True)

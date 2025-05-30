@@ -4,7 +4,7 @@
 mode: "demo"             # demo=บัญชีทดลอง, live=บัญชีจริง
 symbol: "XAUUSD"
 timeframe: "M1"
-n: 10000 
+fetch_candles_n: 10000 
 stop_loss_mode: "dynamic"  # options: fixed, dynamic
 take_profit_mode: "dynamic"
 cooldown_seconds: 60
