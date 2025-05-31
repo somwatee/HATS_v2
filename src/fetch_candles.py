@@ -71,7 +71,7 @@ def fetch_candles(symbol: str, timeframe: str, n: int) -> pd.DataFrame:
 
     # สร้าง DataFrame และแปลง time
     df = pd.DataFrame(rates)
-    df['time'] = pd.to_datetime(df['time'], unit='s')
+    df["time"] = pd.to_datetime(df["time"], unit="s")
 
     # กรองเฉพาะคอลัมน์ที่ต้องการ
     df = df.loc[:, cols]

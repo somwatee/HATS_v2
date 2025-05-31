@@ -2,21 +2,23 @@
 
 from pathlib import Path
 import yaml
-import pandas as pd
 
-from src.fetch_candles    import fetch_candles
-from src.features         import compute_features
-from src.build_labels     import build_labels
-from src.dataset_builder  import build_dataset
+# import pandas as pd
+
+from src.fetch_candles import fetch_candles
+from src.features import compute_features
+from src.build_labels import build_labels
+from src.dataset_builder import build_dataset
+
 
 def main():
     # Load config
     cfg = yaml.safe_load(open("config/config.yaml", encoding="utf-8"))
 
-    symbol    = cfg["symbol"]
+    symbol = cfg["symbol"]
     timeframe = cfg["timeframe"]
-    horizon   = cfg.get("label_horizon", 5)
-    N         = cfg.get("fetch_candles_n", 10000)
+    horizon = cfg.get("label_horizon", 5)
+    N = cfg.get("fetch_candles_n", 10000)
 
     # เตรียมโฟลเดอร์ data
     Path("data").mkdir(exist_ok=True)
@@ -38,6 +40,7 @@ def main():
     df_dataset.to_csv("data/dataset.csv", index=False)
 
     print("Phase 1 pipeline completed.")
+
 
 if __name__ == "__main__":
     main()

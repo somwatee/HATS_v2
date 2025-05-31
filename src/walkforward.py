@@ -79,8 +79,7 @@ def walk_forward(
         idx = 0
         while idx < max_start:
             train_slice = slice(idx, idx + WINDOW_SIZE)
-            test_slice = slice(idx + WINDOW_SIZE,
-                               idx + WINDOW_SIZE + STEP_SIZE)
+            test_slice = slice(idx + WINDOW_SIZE, idx + WINDOW_SIZE + STEP_SIZE)
             X_train, X_test = X.iloc[train_slice], X.iloc[test_slice]
             y_train, y_test = y.iloc[train_slice], y.iloc[test_slice]
 

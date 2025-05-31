@@ -8,8 +8,7 @@ import pandas as pd
 
 
 def build_dataset(
-    features_df: pd.DataFrame,
-    trade_log_df: pd.DataFrame = None
+    features_df: pd.DataFrame, trade_log_df: pd.DataFrame = None
 ) -> pd.DataFrame:
     """
     รวมข้อมูล features กับ log การเทรดจริง (ถ้ามี)
@@ -26,12 +25,8 @@ def build_dataset(
 
     if trade_log_df is not None:
         trade_log = trade_log_df.copy()
-        if not pd.api.types.is_datetime64_any_dtype(
-            trade_log["timestamp"]
-        ):
-            trade_log["timestamp"] = pd.to_datetime(
-                trade_log["timestamp"]
-            )
+        if not pd.api.types.is_datetime64_any_dtype(trade_log["timestamp"]):
+            trade_log["timestamp"] = pd.to_datetime(trade_log["timestamp"])
         df = df.merge(
             trade_log,
             left_on="time",

@@ -10,11 +10,7 @@ import yaml
 from pathlib import Path
 
 # โหลด config.yaml เพื่ออ่าน horizon ถ้ามี (กำหนด default ไว้เป็น 5)
-_cfg_path = (
-    Path(__file__).resolve().parents[1]
-    / "config"
-    / "config.yaml"
-)
+_cfg_path = Path(__file__).resolve().parents[1] / "config" / "config.yaml"
 with open(_cfg_path, "r", encoding="utf-8") as f:
     _cfg = yaml.safe_load(f)
 _horizon = _cfg.get("label_horizon", 5)
@@ -42,18 +38,8 @@ def build_labels(df: pd.DataFrame, horizon: int = None) -> pd.DataFrame:
     labels = ["NoTrade"] * n
 
     # สำหรับแต่ละแท่ง หา High/Low ใน horizon ถัดไป
-    future_high = (
-        df["high"]
-        .shift(-1)
-        .rolling(window=h, min_periods=1)
-        .max()
-    )
-    future_low = (
-        df["low"]
-        .shift(-1)
-        .rolling(window=h, min_periods=1)
-        .min()
-    )
+    future_high = df["high"].shift(-1).rolling(window=h, min_periods=1).max()
+    future_low = df["low"].shift(-1).rolling(window=h, min_periods=1).min()
     current_close = df["close"]
 
     for i in range(n):

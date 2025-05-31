@@ -1,10 +1,10 @@
 import pandas as pd
 
 paths = {
-    "Model (JSON)":         "models/xgboost_model.json",
+    "Model (JSON)": "models/xgboost_model.json",
     "Classification Report": "models/classification_report.txt",
-    "Feature Importance":    "models/feature_importance.csv",
-    "Walk-forward Results":  "models/walkforward_results.csv",
+    "Feature Importance": "models/feature_importance.csv",
+    "Walk-forward Results": "models/walkforward_results.csv",
 }
 
 for name, path in paths.items():
@@ -22,6 +22,7 @@ for name, path in paths.items():
         elif path.endswith(".json"):
             # แค่บอกว่ามีไฟล์ และขนาดโดยประมาณ
             import os
+
             size = os.path.getsize(path)
             print(f"Exists, size = {size} bytes\n")
     except Exception as e:
