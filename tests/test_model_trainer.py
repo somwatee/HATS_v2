@@ -2,7 +2,7 @@ import pandas as pd
 import tempfile
 import os
 import pytest
-from src.model_trainer import train_model
+from src.model_trainer import train_walkforward as train_model
 
 
 def test_train_model_signature(tmp_path, monkeypatch):
